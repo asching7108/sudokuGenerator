@@ -1,6 +1,6 @@
 # Sudoku Generator
 
-This program generates random Sudoku puzzles of different difficulty levels base on the methodology from [this article](https://dlbeer.co.nz/articles/sudoku.html). It also provides connection and insertion methods to the postgresQL database for a full stack Sudoku game project.
+This is a Java program that generates random Sudoku puzzles of different difficulty levels base on the methodology from [this article](https://dlbeer.co.nz/articles/sudoku.html). It also provides connection and insertion methods to the postgresQL database for a full stack Sudoku game project.
 
 ## Links to and screenshot of full stack project
 
