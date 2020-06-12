@@ -42,12 +42,12 @@ public class SudokuPuzzle {
 	 * 
 	 * @param puzzleBoard the 2D array that holds values
 	 */
-	public SudokuPuzzle(int[][] puzzleBoard) {
+	public SudokuPuzzle(int[][] puzzleBoard, int[][] board) {
 		this();
 		// generates Cells
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				puzzle[i][j] = new Cell(i, j, puzzleBoard[i][j]);
+				puzzle[i][j] = new Cell(i, j, board[i][j], puzzleBoard[i][j]);
 				if (puzzleBoard[i][j] > 0) numEmptyCell--;
 			}
 		}
@@ -272,9 +272,39 @@ public class SudokuPuzzle {
 		puzzle[r][c].setVal(val);
 	}
 	
-	public Cell getCell(int r, int c) { return puzzle[r][c]; }
+	/**
+	 * Returns the difficulty level 1-6:
+	 * 
+	 *   1: No backtracks needed with initial empty cells n: 0 < n <= 26.
+	 *      (Can be solved with only one candidate for each step.)
+	 *   2: No backtracks needed with initial empty cells n: 26 < n <= 40.
+	 *   3: No backtracks needed with initial empty cells n: 40 < n < 81.
+	 *   4: Possibly one backtrack needed.
+	 *      (One step has two candidates.)
+	 *   5: Possibly two backtracks needed.
+	 *      (Two steps has two or one step has three candidates.)
+	 *   6: Possibly more backtracks.
+	 *   
+	 * @return the difficulty level
+	 */
+	public int getLevel() {
+		if (difficulty <= 26) { return 1; }
+		if (difficulty <= 40) { return 2; }
+		if (difficulty < 100) { return 3; }
+		if (difficulty < 200) { return 4; }
+		if (difficulty < 300) { return 5; }
+		return 6;
+	}
 	
-	public int getVal(int r, int c) { return puzzle[r][c].getVal(); }
+	/**
+	 * Returns the Cell of the given cell number.
+	 * 
+	 * @param p the cell number
+	 * @return the Cell
+	 */
+	public Cell getCell(int p) { return puzzle[p / 9][p % 9]; }
+	
+	public Cell getCell(int r, int c) { return puzzle[r][c]; }
 	
 	public int getDifficulty() { return difficulty; }
 	

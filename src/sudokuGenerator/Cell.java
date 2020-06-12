@@ -11,8 +11,8 @@ public class Cell implements Comparable<Cell> {
 
 	private int row;			// the row index in the puzzle
 	private int col;			// the column index in the puzzle
-	private int defVal;			// the default value of the cell, immutable
-	private int val;			// the value of the cell
+	private int sltVal;			// the solution value of the cell
+	private int val;			// the current value of the cell
 	private int numCandidates;	// the number of valid candidates
 	private boolean[] flag;		// the array of valid candidates
 	
@@ -21,13 +21,14 @@ public class Cell implements Comparable<Cell> {
 	 * 
 	 * @param r the row index
 	 * @param c the column index
-	 * @param defVal the default value of the cell
+	 * @param sltVal the solution value of the cell
+	 * @param val the current value of the cell
 	 */
-	public Cell(int row, int col, int defVal) {
+	public Cell(int row, int col, int sltVal, int val) {
 		this.row = row;
 		this.col = col;
-		this.defVal = defVal;
-		val = defVal;
+		this.sltVal = sltVal;
+		this.val = val;
 		numCandidates = 0;
 		flag = new boolean[10];
 	}
@@ -40,14 +41,14 @@ public class Cell implements Comparable<Cell> {
 	public Cell(Cell o) {
 		this.row = o.row;
 		this.col = o.col;
-		this.defVal = o.defVal;
-		val = o.val;
+		this.sltVal = o.sltVal;
+		this.val = o.val;
 		numCandidates = 0;
 		flag = new boolean[10];
 	}
 	
 	/**
-	 * Sets the value with the given value.
+	 * Sets the current value with the given value.
 	 * 
 	 * @param val the value
 	 */
@@ -81,13 +82,6 @@ public class Cell implements Comparable<Cell> {
 	}
 	
 	/**
-	 * Returns true if the cell has default value.
-	 * 
-	 * @return true if defVal is 0, otherwise returns false
-	 */
-	public boolean hasDefVal() { return defVal != 0; }
-	
-	/**
 	 * Returns if the cell is empty.
 	 * 
 	 * @return true if val is 0, otherwise returns false
@@ -107,6 +101,8 @@ public class Cell implements Comparable<Cell> {
 	public int getCol() { return col; }
 	
 	public int getVal() { return val; }
+	
+	public int getSltVal() { return sltVal; }
 	
 	public int getNumCandidates() { return numCandidates; }
 	

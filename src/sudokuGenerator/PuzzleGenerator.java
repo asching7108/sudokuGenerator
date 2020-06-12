@@ -23,6 +23,10 @@ import sudokuGenerator.SudokuPuzzle.Solvable;
  */
 public class PuzzleGenerator {
 	
+	// arrays of each level's minimal and maximal difficulty
+	static final int[] LV_MIN_DIFF = new int[] { 0, 26, 40, 50, 100, 200, 300 };
+	static final int[] LV_MAX_DIFF = new int[] { 0, 27, 41, 100, 200, 300, 2000 };
+	
 	private Random rand;
 	
 	public PuzzleGenerator(long seed) {
@@ -35,7 +39,7 @@ public class PuzzleGenerator {
 	 * @param num the number of sudoku boards to generate
 	 * @return a list containing the given number of randomly generated sudoku boards
 	 */
-	public List<int[][]> GenerateBoards(int num) {
+	public List<int[][]> generateBoards(int num) {
 		List<int[][]> boards = new ArrayList<int[][]>();
 		
 		for (int n = 0; n < num; n++) {
@@ -168,20 +172,22 @@ public class PuzzleGenerator {
 	}
 	
 	/**
-	 * Returns a randomly generated sudoku puzzle from the given board.
+	 * Returns a random sudoku puzzle from the given board with the maximal
+	 * difficulty generated in the fixed amount of rounds.
 	 * 
 	 * @param board the 9*9 sudoku board
-	 * @return a randomly generated sudoku puzzle
+	 * @return a randomly generated sudoku puzzle with maximal difficulty
 	 */
 	public SudokuPuzzle generatePuzzle(int[][] board) {
-		SudokuPuzzle puzzle = new SudokuPuzzle(board);
+		SudokuPuzzle puzzle = new SudokuPuzzle(board, board);
 		
 		// keeps tracks of the puzzle with the greatest difficulty
-		SudokuPuzzle best = puzzle;
+		SudokuPuzzle best = new SudokuPuzzle(puzzle);
 		int maxDifficulty = 0;
 		
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 200; i++) {	// fixed rounds to control runtime
 			puzzle = best;	// restarts with the current best puzzle
+			best = new SudokuPuzzle(best);
 			for (int j = 0; j < 20; j++) {
 				randomOperate(puzzle, board);
 				if (puzzle.uniquelySolvable()) {
@@ -196,6 +202,48 @@ public class PuzzleGenerator {
 		}
 		
 		return puzzle;
+	}
+	
+	/**
+	 * Returns a random sudoku puzzle of the given level from the given board
+	 * if generated in the fixed amount of rounds.
+	 * 
+	 * @param board the 9*9 sudoku board
+	 * @return a randomly generated sudoku puzzle of the given level, or null if no 
+	 *         valid puzzle generated
+	 */
+	public SudokuPuzzle generatePuzzleByLevel(int[][] board, int level) {
+		SudokuPuzzle puzzle = new SudokuPuzzle(board, board);
+		
+		// keeps tracks of the puzzle with the greatest difficulty
+		SudokuPuzzle best = new SudokuPuzzle(puzzle);
+		int maxDifficulty = 0;
+		
+		for (int i = 0; i < 200; i++) {	// fixed rounds to control runtime
+			puzzle = best;	// restarts with the current best puzzle
+			best = new SudokuPuzzle(best);
+			for (int j = 0; j < 20; j++) {
+				randomOperate(puzzle, board);
+				if (puzzle.uniquelySolvable()) {
+					int diff = puzzle.getDifficulty();
+					// if puzzle is of the desired level, directly returns it
+					if (diff >= LV_MIN_DIFF[level] && diff < LV_MAX_DIFF[level]) {
+						return puzzle;
+					}
+					// updates the best puzzle and difficulty accordingly
+					if (maxDifficulty <= diff && diff < LV_MAX_DIFF[level]) {
+						maxDifficulty = diff;
+						best = new SudokuPuzzle(puzzle);
+					}
+				}
+			}
+		}
+		
+		int final_diff = puzzle.getDifficulty();
+		if (final_diff >= LV_MIN_DIFF[level] && final_diff < LV_MAX_DIFF[level]) {
+			return puzzle;
+		}
+		return null;
 	}
 	
 	/**
