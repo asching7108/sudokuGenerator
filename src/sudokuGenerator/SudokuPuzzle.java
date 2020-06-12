@@ -164,9 +164,9 @@ public class SudokuPuzzle {
 	 *   2. Finds the empty cell with the smallest number of candidate values.
 	 *   3. Finds the missing value in a set with the smallest number of candidate cells.
 	 *   4. If 2 <= 3, tries filling each candidate value in the identified cell and 
-	 *      recursively solves. If all candidate values are exhausted, it is not solvable.
+	 *      recursively solves it. If all candidate values are exhausted, it is not solvable.
 	 *   5. If 3 < 2, tries filling each candidate cells with the missing value and 
-	 *      recursively solves. If all candidate cells are exhausted, it is not solvable.
+	 *      recursively solves it. If all candidate cells are exhausted, it is not solvable.
 	 * 
 	 * Tries finding more than one solutions and updates the solvability. Updates the 
 	 * difficulty when finding the first solution. If two solutions are found, stops solving 
